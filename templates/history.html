@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/history.css' %}">
+    <title>History</title>
+</head>
+<body>
+    {% if messages %}
+    <ul id="messages" class="popup message-popup">
+        {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <nav id="navbar">
+        <ul>
+            <li><a href="{% url 'index' %}">Home</a></li>
+            <li><a href="{% url 'predict_url' %}">Predict</a></li>
+            <li><a href="{% url 'history_view' %}">History</a></li>
+        </ul>
+        <div class="auth-buttons">
+            <span>Welcome, {{ request.session.username }}!</span>
+            <button type="submit"><a href="{% url 'signout' %}">Sign Out</a></button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <header>
+            <h1>History</h1>
+            <!-- <p>View your URL prediction history.</p> -->
+        </header>
+
+        <section class="history-section">
+            <h2>Your Prediction History</h2>
+            {% if history %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>URL</th>
+                            <th>Predicted Label</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for prediction in history %}
+                            <tr>
+                                <td>{{ prediction.url }}</td>
+                                <td>{{ prediction.predicted_label }}</td>
+                                <td>{{ prediction.prediction_date }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No prediction history found.</p>
+            {% endif %}
+        </section>
+        
+    </main>
+
+    <script>
+        // Show Django messages for 5 seconds
+        var messagesPopup = document.getElementById("messages");
+        if (messagesPopup) {
+            messagesPopup.style.display = "block";
+            setTimeout(function() {
+                messagesPopup.style.display = "none";
+            }, 5000); // 5000 milliseconds = 5 seconds
+        }
+    </script>
+</body>
+</html>
